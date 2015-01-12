@@ -111,13 +111,13 @@
 * modifier 是由于标示 block 或 element 的样式及大小变化的。
 * 为了降低 CSS 继承的复杂度以及 SASS 的嵌套程度，可在 element 前加上 block 标识。
 * 在 CSS 不要包含单独的标签名，若要用到该元素请给它起个名。
-* 连接：blockName~elementName-modifier, 即将 bootstrap 中的 component 作为 block 来处理.即 block 和 element 之间的链接用 `__`, 同 modifier 的连接使用 `-`, 命名使用`_`分隔。
+* 连接：blockName~elementName-modifier, 即将 bootstrap 中的 component 作为 block 来处理.即 block 和 element 之间的链接用 `__`, 同 modifier 的连接使用 `_`, 命名使用`-`分隔。
 * 整体来说最后页面的 class 应该是可用抽象成一个 JSON 文件，来 cover 到所有的元素。
 * CSS 的文件是以 block 为单位的，即存在：menu.css, menu-name.css, menu-name__elem-name.css。
 
 	```html
 		<ul class="menu">
-  			<li class="menu__item">…</li>
+  			<li class="menu__tem">…</li>
   			<li class="menu__item">…</li>
 		</ul>
 	```
@@ -135,7 +135,7 @@
       			<div class="menu__item">Index</div>
    			</li>
     		<li class="menu__layout_unit">
-      			<div class="menu__item menu__item_state_current">Products</div>
+      			<div class="menu~item menu~item_state_current">Products</div>
     		</li>
     		<li class="menu__layout_unit">
       			<div class="menu__item">Contact</div>
@@ -159,6 +159,192 @@ image         | 图片标签
 
 
 ## JavaScript
+首先需要给编辑器配置上 JSHint 或者 JSLint 插件。
+### 基本格式
+ 1. 关于缩进：不同的规范有不同的规定，比如在jQuery Core Style Guide中就指定了以tabs做为缩进。在Google JavaScript Style Guide中就以两个空格做为缩进。作者的建议是每一层使用四个空格做为缩进。
+
+ 2. 语句的终止（statement termination）: 尽管在javascript中存在这自动加入分号机制(automatic semicolon insertion ASI),但是毕竟是自动档的，也有不靠谱的地方。在文中，在文中作者举了一个return的例子，return返回的是一个对象，在return后面进行了换行，根据ASI应该在return后面加入分号，这也就导致的某些不希望的事情发生。正如作者说的，想要省略分号，那样对ASI相当的熟悉才行，所以对于一般的同学还是老老实实的在语句的结尾加上分号吧，防止出错。
+ 
+ ```javascript
+ function getData() {
+ 	return
+    	{
+        	title: "Maintainable JavaScript",
+         	author: "Nicholars C.Zakas"
+     	}    
+ }
+//JS引擎解析的结果
+function getData() {
+    return;
+   	{
+        title: "Maintainable JavaScript",
+        author:"Nicholars C.Zakas"
+    }
+}
+ ```
+	
+3. 每一行的长度（line length）:一行80个字符的来源是因为老革命的文本编辑器，最大只能显示80列，多了的将不会被显示，所以众前辈码农就养成了一行80个字符的习惯。作者建议还是尊重前辈们的意见吧，一行80个字符。
+
+4. 换行（line Breaking）:当一行达到了最大的字符长度，就会涉及到人为换行的问题。作者的建议是在操作符后面进行换行，换行后的新行，比前一行多两个单位的缩进。至于为什么建议要在操作符后进行换行，这里也会涉及到自动加分号机制（ASI）的问题。换行还有一个特殊情况需要考虑，为了考虑到可读性和给包裹行提供上下文，在赋值操作中，新的行应该和赋值的第一部分进行对齐。
+
+```javascript
+//Good:在操作符后进行换行，下面的一行缩进两个级别
+callAFunction(document, element, window, 
+        "some string value");
+//Bad:下面的一行只有一个级别的缩进
+callAfunction(document, element, window,
+    "some string value");
+//Bad,在操作符之前换行
+callAfunction(document, element, window
+        ,"some string value");
+ ```
+ 
+
+5. 空行（blank lines）:总的来说，代码应该是一段一段的像文章一样，而不是一坨文本，所以空行可以用来分隔不相关的代码。作者建议的是在下面的情况中进行加入空行：在方法之间；在方法的本地变量和方法的第一句之间；在多行和单行注释之前；在方法的逻辑之间加入空行。
+
+6. 命名（Naming）:在Javascript的核心，ECMA中使用了camel case的命名规范。Camel-case是以小写字母开头，接着的单词以大写开头，比如thisIsMyname,anotherVariable,aVeryLongVariableName。所以作者建议命名规范就用ES的命名规范camel-case。
+
+```javascript
+	if (isEnabled()) {
+    	setName("Shawnxiao");
+	}
+	if (getName() === "Shawnxiao")  {
+    	doSomething();
+	}
+```
+ 
+7. 变量和函数（Variables and Functions）:变量的名称大多数应该是符合camel case的，并且应该以一个名词开头。以名词开头主要是将变量同函数进行区分，因为函数是多以动词开头的。变量的命名简直就是一门艺术，你要在尽量短的文字中表达出无限的意义。尽量在变量命名时就可以暗示出它的数据类型，比如count, length, 和size就常常被认为是number,而name,title, 和message则常被认为是string。单一的字符，比如i,j和k则常常在循环中使用。无意义的命名应该尽量的被避免，比如foo,bar和temp。    对于函数和方法的命名第一个单词应该是以动词开头的，下面是作者给出的一些对于动词的比较通用的规范：
+
+前缀           | 作用
+------------   | ------------- 
+can			   | 函数返回的是boolean
+has	           |  函数返回的是boolean
+is	           |  函数返回的是boolean
+get	           | 函数返回的是非boolean值
+set	           |  函数被用作存储一个值
+ 
+8. 构造函数（constructor）:对于构造函数的命名，作者建议使用Pascal命名，即第一个字母是大写的，并且构造函数的名称应该是一个名词。。
+
+9. 文字值（literal values）：
+	* 字符（string）:作者建议尽量使用双引号，对于字符串。创建多行字符串的时候，使用加号进行连接。
+
+```javascript
+//Bad
+var longString = "Here's the story, of a man \
+named shawn";
+//Good
+var longString =  "Here's the story, of a man  " +
+                           "named shawn";
+```
+ 
+   * 数值（number）:保留小数前的数字，比如0.5, 10.2。
+
+　　* Null: null 的使用环境可以是：初始化一个可能是对象的值；作为函数的传入/返回值，当期望的传入/返回值是对象的时候。下面的用法应该被避免：使用null来检测一个参数是否提供；使用null来检测一个没有初始化的变量。
+
+　　* undefined: 没有初始化的变量都有一个undefined初始值。作者建议尽量在代码中少使用undefined.
+
+　　* 对象字面量（object literals）:对象字面量和通过创建一个新的实例相比是一种常用的来创建一个已经设定了一些属性的对象。当定义对象字面量的时候，在开括号应该在第一行，接着每一个属性占用一行，并且拥有相同的缩进，最后毕括号单独使用一行。
+
+　　* 数组字面量（Array literals）：使用两个方括号包裹初始的数组值，来创建数组。
+
+###注释
+1. 单行注释（single-line comments）：单行注释有三种方式使用：单独成行，解释注释行下面的代码，这行注释应该和下面的代码保持相同的缩进；在一行代码的末尾，在代码和注释直接至少应该有一个缩进；注释一部分代码，注意是代码而不是额外的说明（这个常常是一些编辑器自带的功能）。
+
+```javascript
+// Good
+if (condition) {
+    // If you made it here, then all security checks passed
+    allwed(); 
+}
+// Bad:在注释的前面没有空号
+if (condition) {
+     // If you made it here, then all security checks passed
+    allwed(); 
+}
+// Bad:错误的缩进
+if (condition) {
+// If you made it here, then all security checks passed
+    allwed(); 
+}
+// Good
+var result = something + sth;     // sth will be something
+//Bad:在代码和注释之间没有足够的空格
+var result = something + sth; // sth will be something
+/ / Good
+// if (condition) {
+//    allwed(); 
+//    doOtherThing();
+// }
+```
+
+2. 多行注释（multiine comments）：作者比较建议的是java风格的多行注释。java的风格是，多行注释至少有三行，一行是/*，一行或多行以*开始的注释，和前一行的*对齐，最后一行以*/结束。多行注释应该和被描述的代码拥有相同的缩进。
+
+3. 使用注释的场景：大体的原则是当某些事是不清楚的，不能一眼看出来的。
+	* 难以理解的代码：
+	* 浏览器特定的Hack：
+	* 文档注释：例如YUIdoc生成文档时需要添加多行注释。
+
+### 语句和表达式
+1. 大括号的对齐：作者建议是使用，开括号和块语句的第一行在同一行。
+
+```javascript
+if (condition) {
+    doSomething();
+} else {
+    doSomethingElse();
+}
+```
+
+2. 块语句的空格（block statement spacing）：作者比较建议的是在开阔号之前和闭括号之后添加空格。
+
+3. switch语句：
+
+　　缩进：jslint的规则是case和switch进行对齐。
+
+　　Falling Through: 如果加了注释后，那么适合的 falling through 是可以允许的。
+
+　　default: 作者的意见是当没有默认行为的时候就省略了 default。
+
+```javascript
+switch(condition) {
+// 明显的fall through
+case "first":
+case "second":
+    //code
+   break;
+case "third":
+    //code
+   break;
+default:
+    //code
+}
+```
+
+4. for循环：尽量避免使用"continue"。
+
+5. for-in循环：for-in循环是用来遍历一个对象的属性。for-in返回的不仅仅是实例的属性，还返回由原型继承来的属性。作者的意见是在尽量使用hasOwnProperty情况下，尽量使用。还有一个值得注意的是，for-in循环的使用点是针对对象的，对于数组是不建议的。
+
+###变量、函数和操作符
+1. 变量声明：一种比较通用的风格就是将所有的变量的声明都放在函数的最上面。简而言之就是按照JS引擎解析的顺序进行。对于var语句，作者的建议是尽量的简化，以减小下载的时间。
+
+2. 函数声明:函数声明和变量声明一样，会被Javascript引擎提升。根据这样的表现，所以建议JavScript的函数在它使用前进行声明。
+
+3. 函数调用时的空格:几乎达成共识的是，对于函数调用的风格都是在函数名和开括号之间不要出现空格。
+
+4. 立即函数调用：JavaScript允许你申明匿名函数，即没用具体名字的函数，并且将函数制定给变量或者是属性。为了使立即调用函数的调用更加的明显，所以在函数的周围放上括号是非常有必要的。
+
+```javascript
+//Good
+var value = (function () {
+    // function body
+    return {
+         message: "HI"
+    }
+}());
+```
+
+5. 相等(equality):相等运算在JavaScript中因为类型强制转换变得复杂。类型强制转换是为了使某些操作成功而将变量从一种特殊的类型自动转换成另外一种类型，这样也就导致了某些无可预料的结果。类型强制转换经常会发生的地方就是使用了==或者!=的时候，这两个操作符会导致两个比较的不同类型的变量进行比较的时候发生类型转换。为了避免类型转换，建议使用===或者!===
+
 ## SASS
 ## Angular
 
