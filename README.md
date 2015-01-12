@@ -165,7 +165,7 @@ image         | 图片标签
 
  2. 语句的终止(statement termination): 尽管在 javascript中 存在这自动加入分号机制(automatic semicolon insertion ASI),但是毕竟是自动档的，也有不靠谱的地方。例如下面 return 的例子，return 返回的是一个对象，在 return 后面进行了换行，根据 ASI 应该在 return 后面加入分号，这也就导致的某些不希望的事情发生。想要省略分号，那需要ASI相当的熟悉才行，所以对于一般的同学还是老老实实的在语句的结尾加上分号吧，防止出错。
  
- ```javascript
+ 	```javascript
  function getData() {
  	return
     	{
@@ -181,25 +181,23 @@ function getData() {
 		author:"Nicholars C.Zakas"
 	}
 }
- ```
-	
+ 	```	
+ 	
 3. 每一行的长度(line length) 一行 80 个字符的来源是因为老革命的文本编辑器，最大只能显示80列，多了的将不会被显示，建议还是尊重前辈们的意见吧，一行80个字符。
 
 4. 换行(line Breaking): 当一行达到了最大的字符长度，就会涉及到人为换行的问题。建议是在操作符后面进行换行，换行后的新行，比前一行多两个单位的缩进。至于为什么建议要在操作符后进行换行，这里也会涉及到自动加分号机制（ASI）的问题。换行还有一个特殊情况需要考虑，为了考虑到可读性和给包裹行提供上下文，在赋值操作中，新的行应该和赋值的第一部分进行对齐。
 
-```javascript
+	```javascript
 //Good:在操作符后进行换行，下面的一行缩进两个级别
 callAFunction(document, element, window, 
-        "some string value");
-        
+        "some string value");      
 //Bad:下面的一行只有一个级别的缩进
 callAfunction(document, element, window,
-    "some string value");
-    
+    "some string value");    
 //Bad,在操作符之前换行
 callAfunction(document, element, window
         ,"some string value");
- ```
+	```
  
 
 5. 空行(blank lines): 总的来说，代码应该是一段一段的像文章一样，而不是一坨文本，所以空行可以用来分隔不相关的代码。建议在下面的情况中进行加入空行：
@@ -210,38 +208,38 @@ callAfunction(document, element, window
 
 6. 命名(Naming): 在 Javascript 的核心，ECMA中 使用了 camel-case 的命名规范。Camel-case是以小写字母开头，接着的单词以大写开头，比如thisIsMyname, anotherVariable, aVeryLongVariableName。所以建议命名规范就用ES的命名规范camel-case。
 
-```javascript
+	```javascript
 	if (isEnabled()) {
     	setName("Shawnxiao");
 	}
 	if (getName() === "Shawnxiao")  {
     	doSomething();
 	}
-```
+	```
  
 7. 变量和函数(Variables and Functions): 变量的名称大多数应该是符合 camel case 的，并且应该以一个名词开头。以名词开头主要是将变量同函数进行区分，因为函数是多以动词开头的。变量的命名简直就是一门艺术，你要在尽量短的文字中表达出无限的意义。尽量在变量命名时就可以暗示出它的数据类型，比如 count, length 和 size 就常常被认为是 number,而 name, title 和 message 则常被认为是 string。单一的字符，比如 i, j 和 k 则常常在循环中使用。无意义的命名应该尽量的被避免，比如 foo, bar 和 temp。    对于函数和方法的命名第一个单词应该是以动词开头的，下面是一些对于动词的比较通用的规范：
 
-前缀           | 作用
-------------   | ------------- 
-can			   | 函数返回的是boolean
-has	           |  函数返回的是boolean
-is	           |  函数返回的是boolean
-get	           | 函数返回的是非boolean值
-set	           |  函数被用作存储一个值
+	前缀           | 作用
+	------------   | ------------- 
+	can			   | 函数返回的是boolean
+	has	           |  函数返回的是boolean
+	is	           |  函数返回的是boolean
+	get	           | 函数返回的是非boolean值
+	set	           |  函数被用作存储一个值
  
 8. 构造函数(constructor): 对于构造函数的命名，建议使用Pascal命名，即第一个字母是大写的，并且构造函数的名称应该是一个名词。
 
 9. 文字值(literal values): 
 	* 字符(string): 建议尽量使用双引号，对于字符串。创建多行字符串的时候，使用加号进行连接。
 
-```javascript
-//Bad
-var longString = "Here's the story, of a man \
-named shawn";
-//Good
-var longString =  "Here's the story, of a man  " +
+		```javascript
+			//Bad
+			var longString = "Here's the story, of a man \
+				named shawn";
+			//Good
+			var longString =  "Here's the story, of a man  " +
                            "named shawn";
-```
+		```
  
    * 数值(number): 保留小数前的数字，比如 0.5, 10.2。
    * Null: null 的使用环境可以是：初始化一个可能是对象的值；作为函数的传入/返回值，当期望的传入/返回值是对象的时候。下面的用法应该被避免：
